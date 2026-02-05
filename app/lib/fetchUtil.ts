@@ -1,5 +1,5 @@
-import axios from "axios";
-import { constant } from "./contstant";
+import axios from 'axios';
+import { constant } from './contstant';
 // import { createCookie } from "react-router";
 
 // let authToken: string | null = null
@@ -12,10 +12,10 @@ import { constant } from "./contstant";
 // })
 
 export const fetchUtils = axios.create({
-    baseURL: `${constant.env.VITE_API_URL}/api`,
-    timeout: 10_000,
-    withCredentials: true,
-})
+  baseURL: `${constant.env.VITE_API_URL}/api`,
+  timeout: 10_000,
+  withCredentials: true,
+});
 
 // fetchUtils.interceptors.request.use(
 //     (config) => {

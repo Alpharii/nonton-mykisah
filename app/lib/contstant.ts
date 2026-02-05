@@ -1,5 +1,5 @@
 export const constant = {
-    env: {
-        VITE_API_URL: import.meta.env.VITE_API_URL || "localhost:3000"
-    }
-}
+  env: {
+    VITE_API_URL: import.meta.env.VITE_API_URL || 'localhost:3000',
+  },
+};

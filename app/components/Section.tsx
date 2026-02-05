@@ -1,13 +1,13 @@
-import { Link } from "react-router"
-import { Button } from "~/components/ui/button"
-import type { LucideIcon } from "lucide-react"
+import { Link } from 'react-router';
+import { Button } from '~/components/ui/button';
+import type { LucideIcon } from 'lucide-react';
 
 type Props = {
-  title: string
-  to: string
-  icon: LucideIcon
-  children: React.ReactNode
-}
+  title: string;
+  to: string;
+  icon: LucideIcon;
+  children: React.ReactNode;
+};
 
 export default function Section({ title, to, icon: Icon, children }: Props) {
   return (
@@ -23,7 +23,6 @@ export default function Section({ title, to, icon: Icon, children }: Props) {
     >
       {/* Header */}
       <div className="flex items-center justify-between">
-        
         <h2 className="flex items-center gap-2 text-2xl font-bold text-white tracking-tight">
           <Icon className="w-5 h-5 text-indigo-400" />
           {title}
@@ -46,5 +45,5 @@ export default function Section({ title, to, icon: Icon, children }: Props) {
 
       {children}
     </section>
-  )
+  );
 }
