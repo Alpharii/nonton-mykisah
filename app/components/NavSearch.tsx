@@ -93,7 +93,7 @@ export default function NavbarSearch() {
             <button
               key={anime.slug}
               onClick={() => {
-                navigate(`/anime/${anime.slug}`);
+                navigate(`/detail/${anime.slug}`);
                 setOpen(false); // 🔥 CLOSE
               }}
               className="
