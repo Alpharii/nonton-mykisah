@@ -33,7 +33,6 @@ export default function DetailAnime() {
 
   return (
     <main className="max-w-screen-2xl mx-auto px-6 lg:px-10 py-8 space-y-8">
-
       {/* HEADER */}
       <div className="space-y-3">
         <button
@@ -74,15 +73,17 @@ export default function DetailAnime() {
             )}
 
             <Button>
-              <Link to={"https://github.com/Alpharii/nonton-mykisah"}>Support dengan memberi bintang kesini</Link>
-              <span className='text-yellow-400'><StarIcon /></span>
+              <Link to={'https://github.com/Alpharii/nonton-mykisah'}>
+                Support dengan memberi bintang kesini
+              </Link>
+              <span className="text-yellow-400">
+                <StarIcon />
+              </span>
             </Button>
 
             {data.navigation.next && (
               <Button asChild>
-                <Link to={`/episode/${data.navigation.next.slug}`}>
-                  Next →
-                </Link>
+                <Link to={`/episode/${data.navigation.next.slug}`}>Next →</Link>
               </Button>
             )}
           </div>
@@ -119,7 +120,6 @@ export default function DetailAnime() {
 
       {/* FULL WIDTH SECTION */}
       <section className="space-y-8">
-
         {/* EPISODES */}
         <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
           <h2 className="text-xl font-bold mb-5">Episodes</h2>
@@ -185,7 +185,6 @@ export default function DetailAnime() {
             ))}
           </div>
         </div>
-
       </section>
     </main>
   );

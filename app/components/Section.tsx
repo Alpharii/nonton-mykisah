@@ -4,7 +4,7 @@ import type { LucideIcon } from 'lucide-react';
 
 type Props = {
   title: string;
-  to: string;
+  to?: string;
   icon: LucideIcon;
   children: React.ReactNode;
 };
@@ -28,19 +28,21 @@ export default function Section({ title, to, icon: Icon, children }: Props) {
           {title}
         </h2>
 
-        <Button
-          asChild
-          className="
-            bg-slate-800
-            hover:bg-slate-700
-            text-slate-200
-            border border-slate-700
-          "
-        >
-          <Link to={to} className="text-sm">
-            Lihat Semua →
-          </Link>
-        </Button>
+        {to && (
+          <Button
+            asChild
+            className="
+              bg-slate-800
+              hover:bg-slate-700
+              text-slate-200
+              border border-slate-700
+            "
+          >
+            <Link to={to} className="text-sm">
+              Lihat Semua →
+            </Link>
+          </Button>
+        )}
       </div>
 
       {children}

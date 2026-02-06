@@ -3,6 +3,7 @@ import { Button } from '~/components/ui/button';
 import { FaSearch } from 'react-icons/fa';
 import { NavLink, Link } from 'react-router';
 import { Clapperboard, Flame, CheckCircle2 } from 'lucide-react';
+import NavbarSearch from './NavSearch';
 
 export default function Navbar() {
   const navClass = ({ isActive }: { isActive: boolean }) =>
@@ -52,19 +53,8 @@ export default function Navbar() {
         </div>
 
         {/* RIGHT */}
-        <div className="hidden md:flex items-center gap-2 w-[350px]">
-          <Input
-            placeholder="Cari anime..."
-            className="
-              bg-slate-900
-              border-slate-700
-              text-white
-              placeholder:text-slate-400
-            "
-          />
-          <Button size="icon" className="bg-slate-800 hover:bg-slate-700">
-            <FaSearch />
-          </Button>
+        <div className="hidden md:flex items-center gap-2 w-[400px]">
+          <NavbarSearch />
         </div>
       </div>
     </nav>
