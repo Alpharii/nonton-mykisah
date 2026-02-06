@@ -33,7 +33,7 @@ export default function Home() {
           "
         >
           {data.ongoing.data.slice(0, 10).map(anime => (
-            <AnimeCard key={anime.slug} anime={anime} />
+            <AnimeCard key={anime.slug} anime={anime} isHaveStatus={true} />
           ))}
         </div>
       </Section>
@@ -49,7 +49,7 @@ export default function Home() {
           "
         >
           {data.completed.data.slice(0, 10).map(anime => (
-            <AnimeCard key={anime.slug} anime={anime} />
+            <AnimeCard key={anime.slug} anime={anime} isHaveStatus={true} />
           ))}
         </div>
       </Section>

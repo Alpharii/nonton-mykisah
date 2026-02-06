@@ -3,9 +3,10 @@ import type { Anime } from '~/types/Anime';
 
 type Props = {
   anime: Anime;
+  isHaveStatus: boolean;
 };
 
-export default function AnimeCard({ anime }: Props) {
+export default function AnimeCard({ anime, isHaveStatus }: Props) {
   return (
     <a
       href={`/detail/${anime.slug}`}
@@ -40,9 +41,11 @@ export default function AnimeCard({ anime }: Props) {
       />
 
       <div className="absolute bottom-0 p-4 w-full text-white">
-        <Badge className="mb-2 capitalize bg-indigo-600 border-0">
-          {anime.type}
-        </Badge>
+        {isHaveStatus && (
+          <Badge className="mb-2 capitalize bg-indigo-600 border-0">
+            {anime.type}
+          </Badge>
+        )}
 
         <h3 className="font-bold leading-tight line-clamp-2">{anime.title}</h3>
 
