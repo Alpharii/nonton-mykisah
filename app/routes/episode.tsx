@@ -80,6 +80,9 @@ export default function DetailAnime() {
                 <StarIcon />
               </span>
             </Button> */}
+            <div>
+              
+            </div>
 
             {data.navigation.next && (
               <Button className="text-sm" asChild>
