@@ -1,21 +1,21 @@
 import { useFetcher, useNavigate, useLocation } from 'react-router';
 import { useEffect, useState } from 'react';
-import { FaSearch } from 'react-icons/fa';
+import { FaSearch, FaTimes } from 'react-icons/fa';
 
-export default function NavbarSearch() {
+export default function NavbarSearch({ mobile = false }: { mobile?: boolean }) {
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const location = useLocation();
 
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
 
-  // CLOSE dropdown setiap pindah halaman
   useEffect(() => {
     setOpen(false);
+    setFullscreen(false);
   }, [location.pathname]);
 
-  // debounce fetch
   useEffect(() => {
     if (query.length < 2) {
       setOpen(false);
@@ -36,77 +36,122 @@ export default function NavbarSearch() {
     if (!query) return;
 
     navigate(`/search?q=${query}`);
-    setOpen(false); // 🔥 CLOSE
+    setOpen(false);
+    setFullscreen(false);
   };
+
+  // ================= MOBILE =================
+
+  if (mobile) {
+    return (
+      <>
+        <FaSearch
+          onClick={() => setFullscreen(true)}
+          className="w-5 h-5 text-slate-300 cursor-pointer"
+        />
+
+        {fullscreen && (
+          <div className="fixed inset-0 z-50 bg-slate-950 p-4">
+            <div className="relative">
+              <SearchInput
+                query={query}
+                setQuery={setQuery}
+                submitSearch={submitSearch}
+                open={open}
+                results={results}
+                navigate={navigate}
+                setOpen={setOpen}
+                loading={fetcher.state === 'loading'}
+                autoFocus
+              />
+
+              <FaTimes
+                onClick={() => setFullscreen(false)}
+                className="absolute -top-10 right-0 text-white cursor-pointer"
+              />
+            </div>
+          </div>
+        )}
+      </>
+    );
+  }
+
+  // ================= DESKTOP =================
 
   return (
     <div className="relative w-[480px] max-w-[40vw]">
-      
-      {/* INPUT + ICON */}
-      <div className="relative">
-        <input
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          onKeyDown={e => {
-            if (e.key === 'Enter') {
-              submitSearch();
-            }
-          }}
-          placeholder="Cari anime..."
-          className="
-            w-full pl-4 pr-10 py-2.5 rounded-xl
-            bg-slate-900 border border-slate-700
-            text-white placeholder:text-slate-400
-            focus:outline-none focus:ring-2 focus:ring-indigo-500
-          "
-        />
+      <SearchInput
+        query={query}
+        setQuery={setQuery}
+        submitSearch={submitSearch}
+        open={open}
+        results={results}
+        navigate={navigate}
+        setOpen={setOpen}
+        loading={fetcher.state === 'loading'}
+      />
+    </div>
+  );
+}
 
-        <FaSearch
-          onClick={submitSearch}
-          className="
-            absolute right-3 top-1/2 -translate-y-1/2
-            text-slate-400 hover:text-white
-            cursor-pointer transition
-          "
-        />
-      </div>
+/* ================= INPUT ================= */
 
-      {/* LOADING */}
-      {fetcher.state === 'loading' && open && (
+function SearchInput({
+  query,
+  setQuery,
+  submitSearch,
+  open,
+  results,
+  navigate,
+  setOpen,
+  loading,
+  autoFocus = false,
+}: any) {
+  return (
+    <div className="relative w-full">
+      <input
+        autoFocus={autoFocus}
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={(e) => e.key === 'Enter' && submitSearch()}
+        placeholder="Cari anime..."
+        className="
+          w-full pl-4 pr-10 py-2.5 rounded-xl
+          bg-slate-900 border border-slate-700
+          text-white placeholder:text-slate-400
+          focus:outline-none focus:ring-2 focus:ring-indigo-500
+        "
+      />
+
+      <FaSearch
+        onClick={submitSearch}
+        className="
+          absolute right-3 top-1/2 -translate-y-1/2
+          text-slate-400 hover:text-white
+          cursor-pointer
+        "
+      />
+
+      {loading && open && (
         <div className="absolute top-14 w-full bg-slate-900 border border-slate-800 rounded-xl p-4 text-sm text-slate-400">
           Searching...
         </div>
       )}
 
-      {/* DROPDOWN */}
       {open && results.length > 0 && (
-        <div
-          className="
-            absolute top-14 w-full
-            bg-slate-900/95 backdrop-blur-xl
-            border border-slate-800
-            rounded-2xl shadow-2xl
-            overflow-hidden
-          "
-        >
+        <div className="absolute top-14 w-full bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
           {results.map((anime: any) => (
             <button
               key={anime.slug}
               onClick={() => {
                 navigate(`/detail/${anime.slug}`);
-                setOpen(false); // 🔥 CLOSE
+                setOpen(false);
               }}
-              className="
-                w-full flex gap-4
-                p-3
-                hover:bg-slate-800/70
-                transition
-                text-left
-              "
+              className="w-full flex gap-4 p-3 hover:bg-slate-800 transition text-left"
             >
               <img
                 src={anime.thumbnail}
-                className="w-16 h-24 object-cover rounded-lg flex-shrink-0"
+                className="w-14 h-20 object-cover rounded-lg"
               />
 
               <div className="flex flex-col gap-1 overflow-hidden">
@@ -117,10 +162,6 @@ export default function NavbarSearch() {
                 <div className="text-xs text-slate-400 flex gap-2">
                   {anime.rating && <span>⭐ {anime.rating}</span>}
                   {anime.status && <span>• {anime.status}</span>}
-                </div>
-
-                <div className="text-xs text-slate-500 line-clamp-1">
-                  {anime.genres?.join(' • ')}
                 </div>
               </div>
             </button>

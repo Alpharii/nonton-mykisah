@@ -53,8 +53,16 @@ export default function Navbar() {
         </div>
 
         {/* RIGHT */}
-        <div className="hidden md:flex items-center gap-2 w-[400px]">
-          <NavbarSearch />
+        <div className="flex items-center gap-3">
+          {/* desktop search */}
+          <div className="hidden md:block w-[400px]">
+            <NavbarSearch />
+          </div>
+
+          {/* mobile search */}
+          <div className="md:hidden">
+            <NavbarSearch mobile />
+          </div>
         </div>
       </div>
     </nav>

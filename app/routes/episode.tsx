@@ -32,7 +32,7 @@ export default function DetailAnime() {
   const navigate = useNavigate();
 
   return (
-    <main className="max-w-screen-2xl mx-auto px-6 lg:px-10 py-8 space-y-8">
+    <main className="max-w-screen-2xl mx-auto w-full px-3 sm:px-4 lg:px-8 py-6 space-y-8 overflow-x-hidden">
       {/* HEADER */}
       <div className="space-y-3">
         <button
@@ -51,9 +51,9 @@ export default function DetailAnime() {
       </div>
 
       {/* PLAYER + SIDEBAR */}
-      <div className="grid xl:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         {/* PLAYER */}
-        <section className="xl:col-span-3 space-y-6">
+        <section className="xl:col-span-3 space-y-6 min-w-0">
           <div className="aspect-video w-full overflow-hidden rounded-2xl border border-slate-800 bg-black shadow-xl">
             <iframe
               src={data.iframe}
@@ -65,14 +65,14 @@ export default function DetailAnime() {
           {/* EP NAVIGATION */}
           <div className="flex justify-between">
             {data.navigation.previous && (
-              <Button asChild>
+              <Button className="text-sm" asChild>
                 <Link to={`/episode/${data.navigation.previous.slug}`}>
                   ← Previous
                 </Link>
               </Button>
             )}
 
-            <Button>
+            <Button className="text-sm">
               <Link to={'https://github.com/Alpharii/nonton-mykisah'}>
                 Support dengan memberi bintang kesini
               </Link>
@@ -82,7 +82,7 @@ export default function DetailAnime() {
             </Button>
 
             {data.navigation.next && (
-              <Button asChild>
+              <Button className="text-sm" asChild>
                 <Link to={`/episode/${data.navigation.next.slug}`}>Next →</Link>
               </Button>
             )}
