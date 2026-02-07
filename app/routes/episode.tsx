@@ -72,14 +72,14 @@ export default function DetailAnime() {
               </Button>
             )}
 
-            <Button className="text-sm">
+            {/* <Button className="text-sm">
               <Link to={'https://github.com/Alpharii/nonton-mykisah'}>
                 Support dengan memberi bintang kesini
               </Link>
               <span className="text-yellow-400">
                 <StarIcon />
               </span>
-            </Button>
+            </Button> */}
 
             {data.navigation.next && (
               <Button className="text-sm" asChild>
