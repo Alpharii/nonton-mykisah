@@ -182,7 +182,7 @@ export default function DetailAnime() {
         </section>
 
         {/* SIDEBAR */}
-        <aside className="space-y-6">
+        <aside className="space-y-6 hidden xl:block">
           <section className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4 sticky top-6">
             <img
               src={data.info.thumbnail}
@@ -372,6 +372,33 @@ export default function DetailAnime() {
             ))}
           </div>
         </div>
+
+        <aside className="space-y-6 block xl:hidden">
+          <section className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5 space-y-4 sticky top-6">
+            <img
+              src={data.info.thumbnail}
+              alt={data.title}
+              className="rounded-xl w-full object-cover"
+            />
+
+            <div className="flex flex-wrap gap-2">
+              {data.info.genres.map((g: string) => (
+                <Badge key={g} className="bg-slate-800">
+                  {g}
+                </Badge>
+              ))}
+            </div>
+
+            <div className="text-sm text-slate-400 space-y-1">
+              <p>Credit: {data.info.credit}</p>
+              <p>Encoder: {data.info.encoder}</p>
+              <p>Duration: {data.info.duration}</p>
+              <p>Type: {data.info.tipe}</p>
+              <p>Author: {data.metadata.author}</p>
+              <p>Rilis: {data.metadata.release}</p>
+            </div>
+          </section>
+        </aside>
       </section>
     </main>
   );
