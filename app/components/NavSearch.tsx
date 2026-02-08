@@ -112,8 +112,8 @@ function SearchInput({
       <input
         autoFocus={autoFocus}
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        onKeyDown={(e) => e.key === 'Enter' && submitSearch()}
+        onChange={e => setQuery(e.target.value)}
+        onKeyDown={e => e.key === 'Enter' && submitSearch()}
         placeholder="Cari anime..."
         className="
           w-full pl-4 pr-10 py-2.5 rounded-xl

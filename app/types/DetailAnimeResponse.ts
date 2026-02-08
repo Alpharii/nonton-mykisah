@@ -1,3 +1,5 @@
+import type { Mirror } from './Mirror';
+
 export type DetailAnimeResponse = {
   title: string;
   streaming_title: string;
@@ -16,6 +18,7 @@ export type DetailAnimeResponse = {
     studio: string;
     genres: string[];
   };
+  mirrors: Mirror[];
   episodes: {
     title: string;
     link: string;

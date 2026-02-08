@@ -1,22 +1,19 @@
-import { Github } from "lucide-react";
-import { FaFolderOpen } from "react-icons/fa";
-import { MdSource } from "react-icons/md";
-import { RiGitRepositoryFill } from "react-icons/ri";
+import { Github } from 'lucide-react';
+import { FaFolderOpen } from 'react-icons/fa';
+import { MdSource } from 'react-icons/md';
+import { RiGitRepositoryFill } from 'react-icons/ri';
 
 export default function Footer() {
   return (
     <footer className="mt-20 border-t border-slate-800 bg-slate-950">
       <div className="max-w-7xl mx-auto px-4 py-12 grid gap-10 md:grid-cols-2">
-        
         {/* LEFT */}
         <div className="space-y-3">
-          <h3 className="text-lg font-semibold text-white">
-            Nonton Mykisah
-          </h3>
+          <h3 className="text-lg font-semibold text-white">Nonton Mykisah</h3>
 
           <p className="text-sm text-slate-400 max-w-sm">
-            Stream anime easily with a fast modern interface powered by
-            React Router. Built for performance and simplicity.
+            Stream anime easily with a fast modern interface powered by React
+            Router. Built for performance and simplicity.
           </p>
 
           <p className="text-xs text-slate-500">
@@ -26,7 +23,6 @@ export default function Footer() {
 
         {/* RIGHT */}
         <div className="grid gap-3 text-sm">
-          
           <a
             href="https://github.com/alpharii"
             target="_blank"

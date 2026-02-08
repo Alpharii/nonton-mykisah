@@ -1,10 +1,17 @@
 import { ArrowLeft, Flame, Star, StarIcon } from 'lucide-react';
+import { useState } from 'react';
 import { Link, useLoaderData, useNavigate } from 'react-router';
 import type { LoaderFunctionArgs, MetaArgs } from 'react-router';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { fetchUtils } from '~/lib/fetchUtil';
 import type { DetailAnimeResponse } from '~/types/DetailAnimeResponse';
+
+type Mirror = {
+  quality: string;
+  provider: string;
+  url: string;
+};
 
 export function meta({ data }: { data: DetailAnimeResponse }) {
   if (!data) {
@@ -31,6 +38,90 @@ export default function DetailAnime() {
   const data = useLoaderData();
   const navigate = useNavigate();
 
+  const PRIORITY_PROVIDERS = ['onedesuhd', 'updesu'];
+
+  const QUALITY_ORDER = ['4K', '1080p', '720p', '480p', '360p'];
+
+  const normalizedMirrors: Mirror[] = (() => {
+    const mirrors = [...data.mirrors];
+
+    if (data.iframe) {
+      const exists = mirrors.some(m => m.url === data.iframe);
+
+      if (!exists) {
+        mirrors.push({
+          quality: '360p',
+          provider: 'Auto',
+          url: data.iframe,
+        });
+      }
+    }
+
+    return mirrors;
+  })();
+
+  function pickInitialMirror(mirrors: Mirror[]) {
+    // priority provider
+    const priority = mirrors.find(m =>
+      PRIORITY_PROVIDERS.some(p => m.provider.toLowerCase().includes(p))
+    );
+
+    if (priority) return priority;
+
+    // fallback iframe
+    const iframeMatch = mirrors.find(m => m.url === data.iframe);
+    if (iframeMatch) return iframeMatch;
+
+    // fallback highest quality
+    return [...mirrors].sort(
+      (a, b) =>
+        QUALITY_ORDER.indexOf(a.quality) - QUALITY_ORDER.indexOf(b.quality)
+    )[0];
+  }
+
+  // ✅ lazy init (VERY IMPORTANT)
+  const [activeMirror, setActiveMirror] = useState<Mirror | null>(() =>
+    pickInitialMirror(normalizedMirrors)
+  );
+
+  // ✅ grouping mirrors
+  const groupedMirrors = Object.values(
+    data.mirrors.reduce((acc: any, mirror: Mirror) => {
+      if (!mirror.url) return acc;
+
+      if (!acc[mirror.quality]) {
+        acc[mirror.quality] = {
+          quality: mirror.quality,
+          providers: [],
+        };
+      }
+
+      acc[mirror.quality].providers.push(mirror);
+
+      // priority sort
+      acc[mirror.quality].providers.sort((a: Mirror, b: Mirror) => {
+        const aPriority = PRIORITY_PROVIDERS.some(p =>
+          a.provider.toLowerCase().includes(p)
+        )
+          ? 0
+          : 1;
+
+        const bPriority = PRIORITY_PROVIDERS.some(p =>
+          b.provider.toLowerCase().includes(p)
+        )
+          ? 0
+          : 1;
+
+        return aPriority - bPriority;
+      });
+
+      return acc;
+    }, {})
+  ).sort(
+    (a: any, b: any) =>
+      QUALITY_ORDER.indexOf(a.quality) - QUALITY_ORDER.indexOf(b.quality)
+  );
+
   return (
     <main className="max-w-screen-2xl mx-auto w-full px-3 sm:px-4 lg:px-8 py-6 space-y-8 overflow-x-hidden">
       {/* HEADER */}
@@ -56,7 +147,7 @@ export default function DetailAnime() {
         <section className="xl:col-span-3 space-y-6 min-w-0">
           <div className="aspect-video w-full overflow-hidden rounded-2xl border border-slate-800 bg-black shadow-xl">
             <iframe
-              src={data.iframe}
+              src={activeMirror?.url || data.iframe}
               allowFullScreen
               className="w-full h-full"
             />
@@ -80,9 +171,7 @@ export default function DetailAnime() {
                 <StarIcon />
               </span>
             </Button> */}
-            <div>
-              
-            </div>
+            <div></div>
 
             {data.navigation.next && (
               <Button className="text-sm" asChild>
@@ -123,6 +212,101 @@ export default function DetailAnime() {
 
       {/* FULL WIDTH SECTION */}
       <section className="space-y-8">
+        <div className="bg-slate-900/50 backdrop-blur border border-slate-800 rounded-3xl p-8">
+          <h2 className="text-2xl font-bold mb-8">Mirrors</h2>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {groupedMirrors.map((group: any) => {
+              const isGroupActive = group.providers.some(
+                (p: Mirror) => p.url === activeMirror?.url
+              );
+
+              const activeProvider =
+                group.providers.find(
+                  (p: Mirror) => p.url === activeMirror?.url
+                ) ?? group.providers[0];
+
+              return (
+                <div
+                  key={group.quality}
+                  className={`
+                  bg-slate-900
+                  border
+                  rounded-2xl
+                  p-5
+                  space-y-4
+                  transition
+                  ${
+                    isGroupActive
+                      ? 'border-indigo-500 shadow-lg shadow-indigo-500/10'
+                      : 'border-slate-800 hover:border-indigo-500'
+                  }
+                `}
+                >
+                  {/* QUALITY */}
+                  <div className="flex items-center justify-between">
+                    <span className="text-lg font-semibold">
+                      {group.quality}
+                    </span>
+
+                    {isGroupActive && (
+                      <span className="text-xs text-indigo-400">
+                        Now Playing
+                      </span>
+                    )}
+                  </div>
+
+                  {/* DROPDOWN */}
+                  <div className="relative">
+                    <select
+                      className="
+                      w-full
+                      appearance-none
+                      bg-slate-800
+                      border border-slate-700
+                      rounded-xl
+                      px-4 py-2.5
+                      text-sm
+                      focus:outline-none
+                      focus:ring-2
+                      focus:ring-indigo-500
+                      hover:border-indigo-500
+                      transition
+                      cursor-pointer
+                    "
+                      value={
+                        group.providers.some(p => p.url === activeMirror?.url)
+                          ? activeMirror?.url
+                          : ''
+                      }
+                      onChange={e => {
+                        const selected = normalizedMirrors.find(
+                          (m: Mirror) => m.url === e.target.value
+                        );
+                        setActiveMirror(selected);
+                      }}
+                    >
+                      <option value="" disabled>
+                        Select provider
+                      </option>
+
+                      {group.providers.map((p: Mirror) => (
+                        <option key={p.url} value={p.url}>
+                          {p.provider}
+                        </option>
+                      ))}
+                    </select>
+
+                    <div className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
+                      ▼
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
         {/* EPISODES */}
         <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6">
           <h2 className="text-xl font-bold mb-5">Episodes</h2>
