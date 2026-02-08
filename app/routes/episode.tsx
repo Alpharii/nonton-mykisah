@@ -43,19 +43,19 @@ export default function DetailAnime() {
   const QUALITY_ORDER = ['4K', '1080p', '720p', '480p', '360p'];
 
   const normalizedMirrors: Mirror[] = (() => {
-  const mirrors = [...data.mirrors];
+    const mirrors = [...data.mirrors];
 
-  if (data.iframe) {
-    const exists = mirrors.some(m => m.url === data.iframe);
+    if (data.iframe) {
+      const exists = mirrors.some(m => m.url === data.iframe);
 
-    if (!exists) {
-      mirrors.push({
-        quality: '360p',
-        provider: 'Auto',
-        url: data.iframe,
-      });
+      if (!exists) {
+        mirrors.push({
+          quality: '360p',
+          provider: 'Auto',
+          url: data.iframe,
+        });
+      }
     }
-  }
 
     return mirrors;
   })();
@@ -63,9 +63,7 @@ export default function DetailAnime() {
   function pickInitialMirror(mirrors: Mirror[]) {
     // priority provider
     const priority = mirrors.find(m =>
-      PRIORITY_PROVIDERS.some(p =>
-        m.provider.toLowerCase().includes(p)
-      )
+      PRIORITY_PROVIDERS.some(p => m.provider.toLowerCase().includes(p))
     );
 
     if (priority) return priority;
@@ -77,8 +75,7 @@ export default function DetailAnime() {
     // fallback highest quality
     return [...mirrors].sort(
       (a, b) =>
-        QUALITY_ORDER.indexOf(a.quality) -
-        QUALITY_ORDER.indexOf(b.quality)
+        QUALITY_ORDER.indexOf(a.quality) - QUALITY_ORDER.indexOf(b.quality)
     )[0];
   }
 
@@ -122,8 +119,7 @@ export default function DetailAnime() {
     }, {})
   ).sort(
     (a: any, b: any) =>
-      QUALITY_ORDER.indexOf(a.quality) -
-      QUALITY_ORDER.indexOf(b.quality)
+      QUALITY_ORDER.indexOf(a.quality) - QUALITY_ORDER.indexOf(b.quality)
   );
 
   return (
@@ -217,9 +213,7 @@ export default function DetailAnime() {
       {/* FULL WIDTH SECTION */}
       <section className="space-y-8">
         <div className="bg-slate-900/50 backdrop-blur border border-slate-800 rounded-3xl p-8">
-          <h2 className="text-2xl font-bold mb-8">
-            Mirrors
-          </h2>
+          <h2 className="text-2xl font-bold mb-8">Mirrors</h2>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {groupedMirrors.map((group: any) => {
@@ -265,20 +259,6 @@ export default function DetailAnime() {
                   {/* DROPDOWN */}
                   <div className="relative">
                     <select
-                      value={
-                        group.providers.some((p: Mirror) => p.url === activeMirror?.url)
-                          ? activeMirror?.url
-                          : ''
-                      }
-                        onChange={e => {
-                          const selected = normalizedMirrors.find(
-                            m => m.url === e.target.value
-                          );
-
-                          if (selected) {
-                            setActiveMirror(selected);
-                          }
-                        }}
                       className="
                       w-full
                       appearance-none
@@ -294,7 +274,22 @@ export default function DetailAnime() {
                       transition
                       cursor-pointer
                     "
+                      value={
+                        group.providers.some((p: Mirror) => p.url === activeMirror?.url)
+                          ? activeMirror?.url
+                          : ''
+                      }
+                      onChange={e => {
+                        const selected: any = normalizedMirrors.find(
+                          (m: Mirror) => m.url === e.target.value
+                        );
+                        setActiveMirror(selected);
+                      }}
                     >
+                      <option value="" disabled>
+                        Select provider
+                      </option>
+
                       {group.providers.map((p: Mirror) => (
                         <option key={p.url} value={p.url}>
                           {p.provider}
