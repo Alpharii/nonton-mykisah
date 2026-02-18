@@ -6,5 +6,5 @@ export type Anime = {
   date: string;
   link: string;
   thumbnail: string;
-  type: 'ongoing' | 'completed';
+  type?: 'ongoing' | 'completed';
 };

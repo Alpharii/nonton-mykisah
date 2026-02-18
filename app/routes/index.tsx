@@ -1,11 +1,13 @@
-import { CheckCircle2, Flame } from 'lucide-react';
+import { CheckCircle2, Flame, History, Watch } from 'lucide-react';
 import { useLoaderData } from 'react-router';
 import type { LoaderFunctionArgs, MetaArgs } from 'react-router';
 
 import AnimeCard from '~/components/AnimeCard';
+import HistoryCard from '~/components/HistoryCard';
 import Navbar from '~/components/Navbar';
 import Section from '~/components/Section';
 import { fetchUtils } from '~/lib/fetchUtil';
+import { getWatchHistory } from '~/lib/history';
 import type { HomeResponse } from '~/types/HomeResponse';
 
 export function meta({}: MetaArgs) {
@@ -20,8 +22,26 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Home() {
   const data = useLoaderData<HomeResponse>();
 
+  const history = getWatchHistory()
+
   return (
     <main className="max-w-7xl mx-auto px-4 py-8 space-y-10">
+      <Section title="History Anime" to='/history' icon={History}>
+        <div
+          className="
+            grid gap-5
+            grid-cols-2
+            sm:grid-cols-3
+            md:grid-cols-4
+            lg:grid-cols-5
+          "
+        >
+          {history.slice(0, 10).map(anime => (
+            <HistoryCard key={anime.slug} anime={anime} />
+          ))}
+        </div>
+      </Section>
+
       <Section title="Ongoing Anime" to="/ongoing" icon={Flame}>
         <div
           className="

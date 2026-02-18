@@ -29,7 +29,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function SearchPage() {
   const data = useLoaderData<typeof loader>();
-  console.log(data);
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-8 space-y-6">

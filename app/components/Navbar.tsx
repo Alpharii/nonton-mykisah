@@ -2,7 +2,7 @@ import { Input } from '~/components/ui/input';
 import { Button } from '~/components/ui/button';
 import { FaSearch } from 'react-icons/fa';
 import { NavLink, Link } from 'react-router';
-import { Clapperboard, Flame, CheckCircle2 } from 'lucide-react';
+import { Clapperboard, Flame, CheckCircle2, History } from 'lucide-react';
 import NavbarSearch from './NavSearch';
 
 export default function Navbar() {
@@ -48,6 +48,11 @@ export default function Navbar() {
             <NavLink to="/completed" className={navClass}>
               <CheckCircle2 className="w-4 h-4" />
               Completed
+            </NavLink>
+            
+            <NavLink to="/history" className={navClass}>
+              <History className="w-4 h-4" />
+              History
             </NavLink>
           </div>
         </div>

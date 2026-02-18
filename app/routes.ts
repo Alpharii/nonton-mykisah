@@ -10,6 +10,7 @@ export default [
     index('routes/index.tsx'),
     route('ongoing', 'routes/ongoing.tsx'),
     route('completed', 'routes/completed.tsx'),
+    route('history', 'routes/history.tsx'),
     route('detail/:slug', 'routes/detail.tsx'),
     route('episode/:slug', 'routes/episode.tsx'),
     route('search', 'routes/search.tsx'),

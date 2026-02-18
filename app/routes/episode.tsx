@@ -1,11 +1,14 @@
 import { ArrowLeft, Flame, Star, StarIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useLoaderData, useNavigate } from 'react-router';
 import type { LoaderFunctionArgs, MetaArgs } from 'react-router';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
+import { parseEpisodeTitle } from '~/lib/episodeUtils';
 import { fetchUtils } from '~/lib/fetchUtil';
+import { upsertHistory } from '~/lib/history';
 import type { DetailAnimeResponse } from '~/types/DetailAnimeResponse';
+import type { AnimeHistory } from '~/types/History';
 
 type Mirror = {
   quality: string;
@@ -34,7 +37,7 @@ export async function loader({ params }: LoaderFunctionArgs) {
   return data.data.data;
 }
 
-export default function DetailAnime() {
+export default function DetailEpisode() {
   const data = useLoaderData();
   const navigate = useNavigate();
 
@@ -121,6 +124,30 @@ export default function DetailAnime() {
     (a: any, b: any) =>
       QUALITY_ORDER.indexOf(a.quality) - QUALITY_ORDER.indexOf(b.quality)
   );
+
+  useEffect(() => {
+    if (!data) return;
+
+    const parsed = parseEpisodeTitle(data.title);
+
+    const historyItem: AnimeHistory = {
+      title: parsed.animeTitle,
+      slug: data.navigation.anime.slug,
+      thumbnail: data.info.thumbnail,
+
+      lastEpisode: {
+        slug: data.slug,
+        title: parsed.animeTitle,
+        episode: parsed.episodeLabel,
+        episodeSlug: data.slug,
+        thumbnail: data.info.thumbnail,
+        link: `/episode/${data.slug}`,
+        date: new Date().toISOString(),
+      },
+    };
+
+    upsertHistory(historyItem);
+  }, [data]);
 
   return (
     <main className="max-w-screen-2xl mx-auto w-full px-3 sm:px-4 lg:px-8 py-6 space-y-8 overflow-x-hidden">
