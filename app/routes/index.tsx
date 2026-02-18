@@ -26,7 +26,7 @@ export default function Home() {
 
   return (
     <main className="max-w-7xl mx-auto px-4 py-8 space-y-10">
-      <Section title="History Anime" to='/history' icon={History}>
+      <Section title="History Kamu" to='/history' icon={History}>
         <div
           className="
             grid gap-5
