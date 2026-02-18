@@ -1,6 +1,6 @@
 import { ArrowLeft, Flame, Star, StarIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { Link, useLoaderData, useNavigate } from 'react-router';
+import { Link, useLoaderData, useNavigate, useParams } from 'react-router';
 import type { LoaderFunctionArgs, MetaArgs } from 'react-router';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
@@ -16,16 +16,16 @@ type Mirror = {
   url: string;
 };
 
-export function meta({ data }: { data: DetailAnimeResponse }) {
+export function meta({ data }: { data: {data: DetailAnimeResponse, slug: string} }) {
   if (!data) {
     return [{ title: 'Nonton Anime Sub Indo' }];
   }
 
   return [
-    { title: `${data.title} — Nonton Anime Sub Indo` },
+    { title: `${data.data.title} — Nonton Anime Sub Indo` },
     {
       name: 'description',
-      content: data.title || data.info.judul,
+      content: data.data.title || data.data.info.judul,
     },
   ];
 }
@@ -34,11 +34,13 @@ export async function loader({ params }: LoaderFunctionArgs) {
   const slug = params.slug;
   const data = await fetchUtils.get(`/episode/${slug}`);
 
-  return data.data.data;
+  return {data: data.data.data, slug};
 }
 
 export default function DetailEpisode() {
-  const data = useLoaderData();
+  const loaderData = useLoaderData();
+  const data = loaderData.data
+  const epsSlug = loaderData.slug
   const navigate = useNavigate();
 
   const PRIORITY_PROVIDERS = ['onedesuhd', 'updesu'];
@@ -139,9 +141,9 @@ export default function DetailEpisode() {
         slug: data.slug,
         title: parsed.animeTitle,
         episode: parsed.episodeLabel,
-        episodeSlug: data.slug,
+        episodeSlug: epsSlug,
         thumbnail: data.info.thumbnail,
-        link: `/episode/${data.slug}`,
+        link: `/episode/${epsSlug}`,
         date: new Date().toISOString(),
       },
     };
