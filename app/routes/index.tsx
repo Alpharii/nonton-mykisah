@@ -36,9 +36,18 @@ export default function Home() {
             lg:grid-cols-5
           "
         >
-          {history.slice(0, 10).map(anime => (
+        {history.length === 0 ? (
+          <div className="col-span-full text-center py-16 text-white/70">
+            <p className="text-lg font-semibold">Belum ada history tontonan</p>
+            <p className="text-sm mt-1">
+              Mulai nonton anime dan history akan muncul di sini 🎬
+            </p>
+          </div>
+        ) : (
+          history.slice(0,10).map(anime => (
             <HistoryCard key={anime.slug} anime={anime} />
-          ))}
+          ))
+        )}
         </div>
       </Section>
 
